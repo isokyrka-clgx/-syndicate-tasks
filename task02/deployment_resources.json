@@ -34,5 +34,29 @@
     "allowed_accounts": [
       "${account_id}"
     ]
+  },
+  "syndicate-demo-java-api": {
+    "deploy_stage": "prod",
+    "dependencies": [
+      {
+        "resource_name": "hello_world",
+        "resource_type": "lambda"
+      }
+    ],
+    "resources": {
+      "/hello": {
+        "enable_cors": true,
+        "GET": {
+          "integration_request_body_template": {},
+          "authorization_type": "AWS_IAM",
+          "integration_type": "lambda",
+          "method_request_parameters": {},
+          "default_error_pattern": true,
+          "integration_passthrough_behavior": "WHEN_NO_TEMPLATES",
+          "lambda_name": "hello_world"
+        }
+      }
+    },
+    "resource_type": "api_gateway"
   }
 }
