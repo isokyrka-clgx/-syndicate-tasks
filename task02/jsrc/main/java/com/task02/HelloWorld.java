@@ -34,6 +34,6 @@ public class HelloWorld implements RequestHandler<APIGatewayProxyRequestEvent, A
 
 	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent, Context context) {
 		return new APIGatewayProxyResponseEvent()
-				.withBody(gson.toJson(new Response(200, "Hello from Lambda")));
+				.withBody("{'statusCode': 200, 'message': 'Hello from Lambda'}");
 	}
 }
