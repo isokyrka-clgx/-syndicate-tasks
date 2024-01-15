@@ -6,10 +6,9 @@ import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.syndicate.deployment.annotations.events.SqsTriggerEventSource;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 
-@LambdaHandler(lambdaName = "sqs_handler",
-		roleName = "sqs_handler-role",
-		isPublishVersion = true,
-		aliasName = "${lambdas_alias_name}"
+@LambdaHandler(
+		lambdaName = "sqs_handler",
+		roleName = "sqs_handler-role"
 )
 @SqsTriggerEventSource(
 		targetQueue = "async_queue",
