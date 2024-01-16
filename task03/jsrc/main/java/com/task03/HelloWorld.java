@@ -28,11 +28,11 @@ import com.syndicate.deployment.model.lambda.url.InvokeMode;
 		authType = AuthType.NONE,
 		invokeMode = InvokeMode.BUFFERED
 )
-public class HelloWorld implements RequestHandler<APIGatewayProxyRequestEvent, String> {
+public class HelloWorld implements RequestHandler<APIGatewayProxyRequestEvent, Response> {
 
 	private final Gson gson = new Gson();
 
-	public String handleRequest(APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent, Context context) {
-		return gson.toJson(new Response(200, "Hello from Lambda"));
+	public Response handleRequest(APIGatewayProxyRequestEvent apiGatewayProxyRequestEvent, Context context) {
+		return new Response(200, "Hello from Lambda");
 	}
 }
