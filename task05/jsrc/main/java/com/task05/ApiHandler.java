@@ -40,7 +40,7 @@ public class ApiHandler implements RequestHandler<Request, Response> {
 		DynamoDBMapperConfig dynamoDBMapperConfig = DynamoDBMapperConfig.builder().build();
 
 		AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder.standard()
-				.withRegion(Regions.EU_CENTRAL_1)
+				.withRegion(Regions.EU_CENTRAL_1.getName())
 				.build();
 
 		this.dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB, dynamoDBMapperConfig);
