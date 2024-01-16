@@ -24,6 +24,10 @@ import com.syndicate.deployment.model.lambda.url.InvokeMode;
 		runtime = DeploymentRuntime.JAVA8,
 		artifactExtension = ArtifactExtension.ZIP
 )
+@LambdaUrlConfig(
+		authType = AuthType.NONE,
+		invokeMode = InvokeMode.BUFFERED
+)
 public class HelloWorld implements RequestHandler<APIGatewayProxyRequestEvent, String> {
 
 	private final Gson gson = new Gson();
