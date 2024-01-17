@@ -27,8 +27,8 @@ import java.util.UUID;
 		lambdaName = "audit_producer",
 		roleName = "audit_producer-role"
 )
-@DynamoDbTriggerEventSource(targetTable = "cmtr-8efb0899-Events-test", batchSize = 1)
-@DependsOn(name = "cmtr-8efb0899-Events-test", resourceType = ResourceType.DYNAMODB_TABLE)
+@DynamoDbTriggerEventSource(targetTable = "Events", batchSize = 1)
+@DependsOn(name = "Events", resourceType = ResourceType.DYNAMODB_TABLE)
 public class AuditProducer implements RequestHandler<DynamodbEvent, Void> {
 
 	private DynamoDBMapper dynamoDBMapper;
