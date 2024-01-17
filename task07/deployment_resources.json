@@ -42,7 +42,7 @@
     "rule_type": "schedule",
     "expression": "cron(0/1 * * * ? *)"
   },
-  "iosbucket": {
+  "uuid-storage": {
     "resource_type": "s3_bucket"
   }
 }
