@@ -42,7 +42,7 @@ public class ApiHandler implements RequestHandler<Request, Response> {
 
 		valueMap.put("body", new AttributeValue().withM(collect));
 
-		amazonDynamoDB.putItem("Events", valueMap);
+		amazonDynamoDB.putItem("cmtr-8efb0899-Events-test", valueMap);
 
 		Event event = new Event();
 		event.setId(UUID.randomUUID().toString());
