@@ -48,7 +48,7 @@ public class AuditProducer implements RequestHandler<DynamodbEvent, Void> {
 
 				System.out.println(newImage);
 
-				Map<String, Object> valueMap = new HashMap<>();
+				Map<String, String> valueMap = new HashMap<>();
 				valueMap.put("key", newImage.get("key").getS());
 				valueMap.put("value", newImage.get("value").getN());
 
@@ -56,7 +56,7 @@ public class AuditProducer implements RequestHandler<DynamodbEvent, Void> {
 				newEvent.setId(UUID.randomUUID().toString());
 				newEvent.setModificationTime(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT));
 				newEvent.setItemKey(newImage.get("key").getS());
-				newEvent.setNewValue(convertObjectToJson(valueMap));
+				newEvent.setNewValue(valueMap);
 
 				dynamoDBMapper.save(newEvent);
 

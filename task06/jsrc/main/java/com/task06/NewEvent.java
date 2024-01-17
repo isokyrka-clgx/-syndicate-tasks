@@ -3,6 +3,8 @@ package com.task06;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
+import java.util.Map;
+
 @DynamoDBTable(tableName = "cmtr-8efb0899-Audit-test")
 public class NewEvent {
 
@@ -13,12 +15,12 @@ public class NewEvent {
 
 	private String modificationTime;
 
-	private String newValue;
+	private Map<String, String> newValue;
 
 	public NewEvent() {
 	}
 
-	public NewEvent(String id, String itemKey, String modificationTime, String newValue) {
+	public NewEvent(String id, String itemKey, String modificationTime, Map<String, String> newValue) {
 		this.id = id;
 		this.itemKey = itemKey;
 		this.modificationTime = modificationTime;
@@ -49,11 +51,11 @@ public class NewEvent {
 		this.modificationTime = modificationTime;
 	}
 
-	public String getNewValue() {
+	public Map<String, String> getNewValue() {
 		return newValue;
 	}
 
-	public void setNewValue(String newValue) {
+	public void setNewValue(Map<String, String> newValue) {
 		this.newValue = newValue;
 	}
 }
