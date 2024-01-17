@@ -40,7 +40,7 @@
   "uuid_trigger": {
     "resource_type": "cloudwatch_rule",
     "rule_type": "schedule",
-    "expression": "rate(1 minutes)"
+    "expression": "0/1 * * * ? *"
   },
   "iosbucket": {
     "resource_type": "s3_bucket"
