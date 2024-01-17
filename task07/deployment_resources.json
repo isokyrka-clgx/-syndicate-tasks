@@ -42,7 +42,7 @@
     "rule_type": "schedule",
     "expression": "rate(1 minutes)"
   },
-  "uuid_trigger": {
+  "uuid_bucket": {
     "resource_type": "s3_bucket"
   }
 }
