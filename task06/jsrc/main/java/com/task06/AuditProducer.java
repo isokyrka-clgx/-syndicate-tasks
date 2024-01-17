@@ -50,7 +50,7 @@ public class AuditProducer implements RequestHandler<DynamodbEvent, Void> {
 
 				Map<String, String> valueMap = new HashMap<>();
 				valueMap.put("key", newImage.get("key").getS());
-				valueMap.put("value", newImage.get("value").getN());
+				valueMap.put("value", newImage.get("value").getS());
 
 				NewEvent newEvent = new NewEvent();
 				newEvent.setId(UUID.randomUUID().toString());
