@@ -71,8 +71,8 @@ public class AuditProducer implements RequestHandler<DynamodbEvent, Void> {
 				updatedEvent.setModificationTime(ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT));
 				updatedEvent.setItemKey(newImage.get("key").getS());
 				updatedEvent.setUpdatedAttribute("value");
-				updatedEvent.setOldValue(Integer.parseInt(record.getDynamodb().getOldImage().get("value").getN()));
-				updatedEvent.setNewValue(Integer.parseInt(newImage.get("value").getN()));
+				updatedEvent.setOldValue(record.getDynamodb().getOldImage().get("value").getS());
+				updatedEvent.setNewValue(newImage.get("value").getS());
 
 				dynamoDBMapper.save(updatedEvent);
 			}

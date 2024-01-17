@@ -15,14 +15,14 @@ public class UpdatedEvent {
 
 	private String updatedAttribute;
 
-	private int oldValue;
+	private String oldValue;
 
-	private int newValue;
+	private String newValue;
 
 	public UpdatedEvent() {
 	}
 
-	public UpdatedEvent(String id, String itemKey, String modificationTime, String updatedAttribute, int oldValue, int newValue) {
+	public UpdatedEvent(String id, String itemKey, String modificationTime, String updatedAttribute, String oldValue, String newValue) {
 		this.id = id;
 		this.itemKey = itemKey;
 		this.modificationTime = modificationTime;
@@ -63,19 +63,19 @@ public class UpdatedEvent {
 		this.updatedAttribute = updatedAttribute;
 	}
 
-	public int getOldValue() {
+	public String getOldValue() {
 		return oldValue;
 	}
 
-	public void setOldValue(int oldValue) {
+	public void setOldValue(String oldValue) {
 		this.oldValue = oldValue;
 	}
 
-	public int getNewValue() {
+	public String getNewValue() {
 		return newValue;
 	}
 
-	public void setNewValue(int newValue) {
+	public void setNewValue(String newValue) {
 		this.newValue = newValue;
 	}
 }
