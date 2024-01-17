@@ -27,8 +27,8 @@ import java.util.UUID;
 		lambdaName = "audit_producer",
 		roleName = "audit_producer-role"
 )
-@DynamoDbTriggerEventSource(targetTable = "Events", batchSize = 1)
-@DependsOn(name = "Events", resourceType = ResourceType.DYNAMODB_TABLE)
+@DynamoDbTriggerEventSource(targetTable = "Configuration", batchSize = 1)
+@DependsOn(name = "Configuration", resourceType = ResourceType.DYNAMODB_TABLE)
 public class AuditProducer implements RequestHandler<DynamodbEvent, Void> {
 
 	private DynamoDBMapper dynamoDBMapper;
@@ -43,7 +43,7 @@ public class AuditProducer implements RequestHandler<DynamodbEvent, Void> {
 			System.out.println("RECORD EVENT NAME: " + record.getEventName());
 			System.out.println("RECORD EVENT SOURCE ARN: " + record.getEventSourceARN());
 
-			if ("INSERT".equals(record.getEventName()) && record.getEventSourceARN().contains("Events")) {
+			if ("INSERT".equals(record.getEventName()) && record.getEventSourceARN().contains("Configuration")) {
 				Map<String, AttributeValue> newImage = record.getDynamodb().getNewImage();
 
 				System.out.println(newImage);
@@ -61,7 +61,7 @@ public class AuditProducer implements RequestHandler<DynamodbEvent, Void> {
 				dynamoDBMapper.save(newEvent);
 
 			}
-			else if ("MODIFY".equals(record.getEventName()) && record.getEventSourceARN().contains("Events")) {
+			else if ("MODIFY".equals(record.getEventName()) && record.getEventSourceARN().contains("Configuration")) {
 				Map<String, AttributeValue> newImage = record.getDynamodb().getNewImage();
 
 				System.out.println(newImage);

@@ -28,7 +28,7 @@
     },
     "resource_type": "iam_policy"
   },
-  "Events": {
+  "Configuration": {
     "resource_type": "dynamodb_table",
     "hash_key_name": "key",
     "hash_key_type": "S",
