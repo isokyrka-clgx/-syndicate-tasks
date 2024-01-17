@@ -42,7 +42,7 @@
     "rule_type": "schedule",
     "expression": "rate(1 minutes)"
   },
-  "uuid_bucket": {
+  "iosbucket": {
     "resource_type": "s3_bucket"
   }
 }

@@ -39,7 +39,7 @@ public class UuidGenerator implements RequestHandler<CloudWatchLogsEvent, Void> 
 		this.s3Client = AmazonS3Client.builder().withRegion(Regions.EU_CENTRAL_1).build();
 		this.objectMapper = new ObjectMapper();
 
-		String bucketName = "cmtr-8efb0899-uuid_bucket-test";
+		String bucketName = "cmtr-8efb0899-iosbucket-test";
 
 		Holder holder = new Holder(Stream.generate(UUID::randomUUID)
 				.limit(10).collect(Collectors.toList()));
