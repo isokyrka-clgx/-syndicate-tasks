@@ -44,7 +44,7 @@ public class UuidGenerator implements RequestHandler<CloudWatchLogsEvent, Void> 
 		Holder holder = new Holder(Stream.generate(UUID::randomUUID)
 				.limit(10).collect(Collectors.toList()));
 
-		String fileName = "2023-01-01T00:00:00.000Z";
+		String fileName = ZonedDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ISO_INSTANT);
 
 		s3Client.putObject(bucketName, fileName, convertObjectToJson(holder));
 
