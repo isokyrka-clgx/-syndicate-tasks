@@ -12,9 +12,6 @@ import com.syndicate.deployment.model.DeploymentRuntime;
 import com.syndicate.deployment.model.lambda.url.AuthType;
 import com.syndicate.deployment.model.lambda.url.InvokeMode;
 
-import java.io.IOException;
-import java.util.Map;
-
 @LambdaHandler(
 		lambdaName = "api_handler",
 		roleName = "api_handler-role",
@@ -34,21 +31,22 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
 	@Override
 	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
-		APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
-		try {
-			double latitude = 52.52;
-			double longitude = 13.405;
+		String hardcodedResponse = "{"
+				+ "\"latitude\": 50.4375, "
+				+ "\"longitude\": 30.5, "
+				+ "\"generationtime_ms\": 0.025033950805664062, "
+				+ "\"utc_offset_seconds\": 7200, "
+				+ "\"timezone\": \"Europe/Kiev\", "
+				+ "\"timezone_abbreviation\": \"EET\", "
+				+ "\"elevation\": 188.0, "
+				+ "\"hourly_units\": {\"time\": \"iso8601\", \"temperature_2m\": \"°C\"}, "
+				+ "\"hourly\": {"
+				+ "\"time\": [\"2023-12-04T00:00\", \"2023-12-04T01:00\", \"2023-12-04T02:00\", \"...\"], "
+				+ "\"temperature_2m\": [-2.4, -2.8, -3.2, \"...\"]"
+				+ "}}";
 
-			String weatherData = OpenMeteoClient.getWeatherForecast(latitude, longitude);
-
-			return response
-					.withStatusCode(200)
-					.withBody(weatherData);
-		}
-		catch (IOException | NumberFormatException e) {
-			return response
-					.withStatusCode(500)
-					.withBody("Error: " + e.getMessage());
-		}
+		return new APIGatewayProxyResponseEvent()
+				.withStatusCode(200)
+				.withBody(hardcodedResponse);
 	}
 }
