@@ -4,7 +4,6 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
-import com.openmeteo.sdk.Model;
 import com.syndicate.deployment.annotations.LambdaUrlConfig;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.annotations.lambda.LambdaLayer;
@@ -12,6 +11,7 @@ import com.syndicate.deployment.model.ArtifactExtension;
 import com.syndicate.deployment.model.DeploymentRuntime;
 import com.syndicate.deployment.model.lambda.url.AuthType;
 import com.syndicate.deployment.model.lambda.url.InvokeMode;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ import java.io.IOException;
 )
 @LambdaLayer(
 		layerName = "sdk-layer",
-		libraries = { "lib/open-meteo-sdk-1.4.0.jar" },
+		libraries = { "lib/lib/commons-lang3-3.14.0.jar" },
 		runtime = DeploymentRuntime.JAVA8,
 		artifactExtension = ArtifactExtension.ZIP
 )
@@ -36,8 +36,8 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
 		APIGatewayProxyResponseEvent response = new APIGatewayProxyResponseEvent();
 		try {
-			String name = Model.name(1);
-			System.out.println(name);
+
+			StringUtils.isNotBlank("qw");
 
 			double latitude = 50.4375;
 			double longitude = 30.5;

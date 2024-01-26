@@ -36,11 +36,11 @@
             <version>${deployment-configuration-annotations.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.open-meteo</groupId>
-            <artifactId>sdk</artifactId>
-            <version>1.4.0</version>
+            <groupId>demo.custom.sdk</groupId>
+            <artifactId>commons-lang3-downloaded-library</artifactId>
+            <version>3.14.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/open-meteo-sdk-1.4.0.jar</systemPath>
+            <systemPath>${basedir}/lib/commons-lang3-3.14.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
