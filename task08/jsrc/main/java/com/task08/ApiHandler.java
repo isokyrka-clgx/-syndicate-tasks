@@ -27,11 +27,11 @@ import com.syndicate.deployment.model.lambda.url.InvokeMode;
 		authType = AuthType.NONE,
 		invokeMode = InvokeMode.BUFFERED
 )
-public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
+public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, String> {
 
 	@Override
-	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
-		String hardcodedResponse = "{"
+	public String handleRequest(APIGatewayProxyRequestEvent request, Context context) {
+		return "{"
 				+ "\"latitude\": 50.4375, "
 				+ "\"longitude\": 30.5, "
 				+ "\"generationtime_ms\": 0.025033950805664062, "
@@ -44,9 +44,5 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 				+ "\"time\": [\"2023-12-04T00:00\", \"2023-12-04T01:00\", \"2023-12-04T02:00\", \"...\"], "
 				+ "\"temperature_2m\": [-2.4, -2.8, -3.2, \"...\"]"
 				+ "}}";
-
-		return new APIGatewayProxyResponseEvent()
-				.withStatusCode(200)
-				.withBody(hardcodedResponse);
 	}
 }
