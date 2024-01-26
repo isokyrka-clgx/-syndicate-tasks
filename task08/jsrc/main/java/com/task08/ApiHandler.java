@@ -22,7 +22,7 @@ import java.io.IOException;
 )
 @LambdaLayer(
 		layerName = "sdk-layer",
-		libraries = { "lib/lib/commons-lang3-3.14.0.jar" },
+		libraries = { "lib/commons-lang3-3.14.0.jar" },
 		runtime = DeploymentRuntime.JAVA8,
 		artifactExtension = ArtifactExtension.ZIP
 )
