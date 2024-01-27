@@ -44,7 +44,7 @@ import java.util.UUID;
 )
 @LambdaLayer(
 		layerName = "sdk-layer",
-		libraries = { "lib/jackson-databind-2.10.0.jar", "lib/jackson-annotations-2.10.0.jar" },
+		libraries = { "lib/jackson-databind-2.12.1.jar", "lib/jackson-annotations-2.12.1.jar" },
 		runtime = DeploymentRuntime.JAVA8,
 		artifactExtension = ArtifactExtension.ZIP
 )
