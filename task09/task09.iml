@@ -24,18 +24,18 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.12.6" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:jmespath-java:1.12.490" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: com.fasterxml.jackson.core:jackson-databind:2.10.0">
+      <library name="Maven: com.fasterxml.jackson.core:jackson-databind:2.12.1">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jackson-databind-2.10.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jackson-databind-2.12.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.10.0">
+      <library name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.12.1">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jackson-databind-2.10.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/jackson-annotations-2.12.1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
