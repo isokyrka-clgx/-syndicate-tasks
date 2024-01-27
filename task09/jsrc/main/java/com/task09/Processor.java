@@ -27,10 +27,7 @@ import com.syndicate.deployment.model.lambda.url.InvokeMode;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 
 @LambdaHandler(
 		lambdaName = "processor",
@@ -65,9 +62,41 @@ public class Processor implements RequestHandler<APIGatewayProxyRequestEvent, AP
 			JsonNode jsonNode = objectMapper.readTree(weatherData);
 			String id = UUID.randomUUID().toString();
 
+			Map<String, AttributeValue> forecastData = new HashMap<>();
+			forecastData.put("latitude", new AttributeValue().withN(String.valueOf(jsonNode.get("latitude").asDouble())));
+			forecastData.put("longitude", new AttributeValue().withN(String.valueOf(jsonNode.get("longitude").asDouble())));
+			forecastData.put("generationtime_ms", new AttributeValue().withN(String.valueOf(jsonNode.get("generationtime_ms").asDouble())));
+			forecastData.put("utc_offset_seconds", new AttributeValue().withN(String.valueOf(jsonNode.get("utc_offset_seconds").asInt())));
+			forecastData.put("timezone", new AttributeValue().withS(jsonNode.get("timezone").asText()));
+			forecastData.put("timezone_abbreviation", new AttributeValue().withS(jsonNode.get("timezone_abbreviation").asText()));
+			forecastData.put("elevation", new AttributeValue().withN(String.valueOf(jsonNode.get("elevation").asDouble())));
+
+			JsonNode hourlyNode = jsonNode.path("hourly");
+			Map<String, AttributeValue> hourlyData = new HashMap<>();
+
+			List<AttributeValue> temperatureList = new ArrayList<>();
+			hourlyNode.path("temperature_2m").forEach(temp ->
+					temperatureList.add(new AttributeValue().withN(temp.asText()))
+			);
+			hourlyData.put("temperature_2m", new AttributeValue().withL(temperatureList));
+
+			List<AttributeValue> timeList = new ArrayList<>();
+			hourlyNode.path("time").forEach(time ->
+					timeList.add(new AttributeValue().withS(time.asText()))
+			);
+			hourlyData.put("time", new AttributeValue().withL(timeList));
+
+			forecastData.put("hourly", new AttributeValue().withM(hourlyData));
+
+			JsonNode hourlyUnitsNode = jsonNode.path("hourly_units");
+			Map<String, AttributeValue> hourlyUnitsData = new HashMap<>();
+			hourlyUnitsData.put("temperature_2m", new AttributeValue().withS(hourlyUnitsNode.path("temperature_2m").asText()));
+			hourlyUnitsData.put("time", new AttributeValue().withS(hourlyUnitsNode.path("time").asText()));
+			forecastData.put("hourly_units", new AttributeValue().withM(hourlyUnitsData));
+
 			Map<String, AttributeValue> item = new HashMap<>();
 			item.put("id", new AttributeValue().withS(id));
-			item.put("forecast", new AttributeValue().withS(jsonNode.toString()));
+			item.put("forecast", new AttributeValue().withM(forecastData));
 
 			dynamoDB.putItem(new PutItemRequest().withTableName("cmtr-8efb0899-Weather-test").withItem(item));
 

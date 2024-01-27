@@ -41,11 +41,19 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Maven: com.fasterxml.jackson.core:jackson-core:2.12.1">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jackson-core-2.12.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-xray:1.12.153" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:aws-xray-recorder-sdk-aws-sdk:2.15.0" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:aws-xray-recorder-sdk-core:2.15.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.amazonaws:aws-xray-recorder-sdk-aws-sdk-core:2.15.0" level="project" />
     <orderEntry type="library" name="Maven: net.sf.aws-syndicate:deployment-configuration-annotations:1.10.0" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.6.6" level="project" />
   </component>
 </module>
