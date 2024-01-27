@@ -46,7 +46,7 @@
             <artifactId>jackson-annotations</artifactId>
             <version>2.10.0</version>
             <scope>system</scope>
-            <systemPath>${basedir}/lib/jackson-databind-2.10.0.jar</systemPath>
+            <systemPath>${basedir}/lib/jackson-annotations-2.10.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
