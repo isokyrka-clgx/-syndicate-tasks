@@ -23,13 +23,11 @@
     <orderEntry type="library" name="Maven: software.amazon.ion:ion-java:1.0.2" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.12.6" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:jmespath-java:1.12.490" level="project" />
-    <orderEntry type="library" name="Maven: com.amazonaws:aws-xray-recorder-sdk-aws-sdk:2.15.0" level="project" />
-    <orderEntry type="library" name="Maven: com.amazonaws:aws-xray-recorder-sdk-core:2.15.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.amazonaws:aws-xray-recorder-sdk-aws-sdk-core:2.15.0" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.10.0" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.10.0" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.0" level="project" />
-    <orderEntry type="library" name="Maven: net.sf.aws-syndicate:deployment-configuration-annotations:1.10.0" level="project" />
     <orderEntry type="library" name="Maven: com.amazonaws:aws-java-sdk-xray:1.12.153" level="project" />
+    <orderEntry type="library" name="Maven: com.amazonaws:aws-xray-recorder-sdk-core:2.15.0" level="project" />
+    <orderEntry type="library" name="Maven: net.sf.aws-syndicate:deployment-configuration-annotations:1.10.0" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.6.6" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.6" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.6.0" level="project" />
   </component>
 </module>
