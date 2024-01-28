@@ -25,7 +25,7 @@ import java.util.UUID;
 		roleName = "api_handler-role"
 )
 @DependsOn(name = "Tables", resourceType = ResourceType.DYNAMODB_TABLE)
-@DependsOn(name = "Reservation", resourceType = ResourceType.DYNAMODB_TABLE)
+@DependsOn(name = "Reservations", resourceType = ResourceType.DYNAMODB_TABLE)
 public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, Object> {
 
 	private static final String UNSUPPORTED_METHOD_RESPONSE = "Unsupported method";
