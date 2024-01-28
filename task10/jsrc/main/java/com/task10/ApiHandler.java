@@ -37,6 +37,8 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		this.initDynamoDbClient();
 		this.objectMapper = new ObjectMapper();
 
+		System.out.println(request);
+
 		String httpMethod = request.getHttpMethod();
 		String resourcePath = request.getResource();
 
