@@ -116,12 +116,8 @@
         "GET": {
           "authorization_type": "NONE",
           "integration_type": "lambda",
-          "method_request_parameters": {
-            "method.request.httpMethod": "true"
-          },
-          "integration_request_body_template": {
-            "application/json": "{\"http-method\" : \"$input.params('httpMethod')\", \"httpMethod\" : \"$input.params('httpMethod')\"}"
-          },
+          "method_request_parameters": {},
+          "integration_request_body_template": {},
           "default_error_pattern": true,
           "lambda_name": "api_handler"
         }
