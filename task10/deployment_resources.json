@@ -114,12 +114,15 @@
           "lambda_name": "api_handler"
         },
         "GET": {
-          "integration_request_body_template": {},
           "authorization_type": "NONE",
           "integration_type": "lambda",
-          "method_request_parameters": {},
+          "method_request_parameters": {
+            "method.request.httpMethod": "true"
+          },
+          "integration_request_body_template": {
+            "application/json": "{\"http-method\" : \"$input.params('httpMethod')\", \"httpMethod\" : \"$input.params('httpMethod')\"}"
+          },
           "default_error_pattern": true,
-          "integration_passthrough_behavior": "WHEN_NO_TEMPLATES",
           "lambda_name": "api_handler"
         }
       },
