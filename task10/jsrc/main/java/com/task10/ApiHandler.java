@@ -60,7 +60,14 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 		case "/reservations":
 			if ("POST".equals(httpMethod)) {
 				System.out.println("Handling POST request reservation");
-				return ResponseHandler.successResponse(gson.toJson(handleCreateReservation(request)));
+
+				ReservationCreatedResponse reservationCreatedResponse = handleCreateReservation(request);
+
+				if (reservationCreatedResponse == null) {
+					ResponseHandler.errorResponse("Error creating reservation");
+				}
+
+				return ResponseHandler.successResponse(gson.toJson(reservationCreatedResponse));
 			}
 			else if ("GET".equals(httpMethod)) {
 				System.out.println("Handling GET request reservation");
@@ -77,6 +84,15 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 			else if ("POST".equals(httpMethod)) {
 				System.out.println("Handling POST request tables");
 				return ResponseHandler.successResponse(gson.toJson(handleCreateTable(request)));
+			}
+			else {
+				return ResponseHandler.errorResponse("Unsupported method");
+			}
+		case "/tables/{tableId}":
+			if ("GET".equals(httpMethod)) {
+				Integer tableId = Integer.parseInt(request.getPathParameters().get("tableId"));
+				System.out.println("Handling GET request tables/{tableId}");
+				return ResponseHandler.successResponse(gson.toJson(handleGetTable(tableId.toString())));
 			}
 			else {
 				return ResponseHandler.errorResponse("Unsupported method");
@@ -120,6 +136,12 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 
 		System.out.println(String.format("Creating reservation with id %s", id));
 
+		TableResponse tableResponse = handleGetTable(reservation.getTableNumber().toString());
+
+		if (tableResponse.getId() == null) {
+			return null;
+		}
+
 		dynamoDBMapper.save(reservation);
 
 		return new ReservationCreatedResponse(id);
@@ -153,7 +175,10 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 		System.out.println(String.format("Getting table with id %s", id));
 
 		Table table = dynamoDBMapper.load(Table.class, id);
-		return TableResponse.fromTableModel(table);//TODO add handle case
+
+		System.out.println(gson.toJson(table));
+
+		return TableResponse.fromTableModel(table);
 	}
 
 	private <T> T parseObjectFromRequest(String body, Class<T> targetClass) {
@@ -204,8 +229,8 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 		}
 		catch (CognitoIdentityProviderException exc) {
 			System.out.println(exc.awsErrorDetails().errorMessage());
+			return ResponseHandler.errorResponse("Failed to authenticate user :" + exc.awsErrorDetails().errorMessage());
 		}
-		return ResponseHandler.errorResponse("Failed to authenticate user");
 	}
 
 	private APIGatewayProxyResponseEvent handleSignup(APIGatewayProxyRequestEvent request) {
@@ -226,15 +251,16 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 		try {
 			System.out.println("Registering user in cognito");
 
-			registerUserInCognito(email, password, firstName, lastName);
+			AdminConfirmSignUpResponse adminConfirmSignUpResponse = registerUserInCognito(email, password, firstName, lastName);
 
-			System.out.println("User registered successfully");
-			return ResponseHandler.successResponse("User registered successfully");
+			return adminConfirmSignUpResponse.sdkHttpResponse().isSuccessful() ?
+					ResponseHandler.successResponse("User registered successfully") :
+					ResponseHandler.errorResponse("Failed to register user");
 		}
 		catch (CognitoIdentityProviderException exc) {
 			System.out.println(exc.awsErrorDetails().errorMessage());
+			return ResponseHandler.errorResponse("Failed to register user :" + exc.awsErrorDetails().errorMessage());
 		}
-		return ResponseHandler.errorResponse("Failed to register user");
 	}
 
 	private AdminConfirmSignUpResponse registerUserInCognito(String email, String password, String firstName,
