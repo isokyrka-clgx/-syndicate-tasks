@@ -22,7 +22,7 @@
             "kms:Decrypt",
             "cognito-idp:*",
             "cognito-sync:*",
-            "cognito-identity:*",
+            "cognito-identity:*"
           ],
           "Effect": "Allow",
           "Resource": "*"
