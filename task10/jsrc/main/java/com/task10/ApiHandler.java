@@ -9,7 +9,9 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBScanExpression;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.syndicate.deployment.annotations.lambda.LambdaHandler;
 import com.syndicate.deployment.annotations.resources.DependsOn;
 import com.syndicate.deployment.model.ResourceType;
@@ -34,15 +36,17 @@ import java.util.UUID;
 )
 @DependsOn(name = "Tables", resourceType = ResourceType.DYNAMODB_TABLE)
 @DependsOn(name = "Reservations", resourceType = ResourceType.DYNAMODB_TABLE)
-public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, Object> {
+public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> {
 
 	private static final String UNSUPPORTED_METHOD_RESPONSE = "Unsupported method";
 	private CognitoIdentityProviderClient identityProviderClient;
 	private DynamoDBMapper dynamoDBMapper;
 	private ObjectMapper objectMapper;
 
+	private final Gson gson = new Gson();
+
 	@Override
-	public Object handleRequest(APIGatewayProxyRequestEvent request, Context context) {
+	public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context) {
 		this.initDynamoDbClient();
 		this.objectMapper = new ObjectMapper();
 
@@ -56,26 +60,26 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		case "/reservations":
 			if ("POST".equals(httpMethod)) {
 				System.out.println("Handling POST request reservation");
-				return handleCreateReservation(request);
+				return ResponseHandler.successResponse(gson.toJson(handleCreateReservation(request)));
 			}
 			else if ("GET".equals(httpMethod)) {
 				System.out.println("Handling GET request reservation");
-				return handleGetReservations();
+				return ResponseHandler.successResponse(gson.toJson(handleGetReservations()));
 			}
 			else {
-				return UNSUPPORTED_METHOD_RESPONSE;
+				return ResponseHandler.errorResponse("Unsupported method");
 			}
 		case "/tables":
 			if ("GET".equals(httpMethod)) {
 				System.out.println("Handling GET request tables");
-				return handleGetTables();
+				return ResponseHandler.successResponse(gson.toJson(handleGetTables()));
 			}
 			else if ("POST".equals(httpMethod)) {
 				System.out.println("Handling POST request tables");
-				return handleCreateTable(request);
+				return ResponseHandler.successResponse(gson.toJson(handleCreateTable(request)));
 			}
 			else {
-				return UNSUPPORTED_METHOD_RESPONSE;
+				return ResponseHandler.errorResponse("Unsupported method");
 			}
 		case "/signup":
 			if ("POST".equals(httpMethod)) {
@@ -83,7 +87,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 				return handleSignup(request);
 			}
 			else {
-				return UNSUPPORTED_METHOD_RESPONSE;
+				return ResponseHandler.errorResponse("Unsupported method");
 			}
 		case "/signin":
 			if ("POST".equals(httpMethod)) {
@@ -91,10 +95,10 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 				return handleSignin(request);
 			}
 			else {
-				return UNSUPPORTED_METHOD_RESPONSE;
+				return ResponseHandler.errorResponse("Unsupported method");
 			}
 		default:
-			return UNSUPPORTED_METHOD_RESPONSE;
+			return ResponseHandler.errorResponse("Unsupported method");
 		}
 	}
 
@@ -161,7 +165,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		}
 	}
 
-	private String handleSignin(APIGatewayProxyRequestEvent request) {
+	private APIGatewayProxyResponseEvent handleSignin(APIGatewayProxyRequestEvent request) {
 		JSONParser parser = new JSONParser();
 		JSONObject bodyJson = null;
 		try {
@@ -196,15 +200,15 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 
 			System.out.println("Successfully authenticated user");
 
-			return responseBody.toJSONString();
+			return ResponseHandler.successResponse(responseBody.toJSONString());
 		}
 		catch (CognitoIdentityProviderException exc) {
 			System.out.println(exc.awsErrorDetails().errorMessage());
 		}
-		return null;
+		return ResponseHandler.errorResponse("Failed to authenticate user");
 	}
 
-	private String handleSignup(APIGatewayProxyRequestEvent request) {
+	private APIGatewayProxyResponseEvent handleSignup(APIGatewayProxyRequestEvent request) {
 		JSONParser parser = new JSONParser();
 		JSONObject bodyJson = null;
 		try {
@@ -223,13 +227,14 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 			System.out.println("Registering user in cognito");
 
 			registerUserInCognito(email, password, firstName, lastName);
+
 			System.out.println("User registered successfully");
-			return "User registered successfully";
+			return ResponseHandler.successResponse("User registered successfully");
 		}
 		catch (CognitoIdentityProviderException exc) {
 			System.out.println(exc.awsErrorDetails().errorMessage());
 		}
-		return null;
+		return ResponseHandler.errorResponse("Failed to register user");
 	}
 
 	private AdminConfirmSignUpResponse registerUserInCognito(String email, String password, String firstName,
