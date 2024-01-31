@@ -194,8 +194,9 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 			JSONObject responseBody = new JSONObject();
 			responseBody.put("accessToken", accessToken);
 
-			return response.sdkHttpResponse().isSuccessful() ?
-					responseBody.toJSONString() : "Error";
+			System.out.println("Successfully authenticated user");
+
+			return responseBody.toJSONString();
 		}
 		catch (CognitoIdentityProviderException exc) {
 			System.out.println(exc.awsErrorDetails().errorMessage());
@@ -221,10 +222,9 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		try {
 			System.out.println("Registering user in cognito");
 
-			AdminConfirmSignUpResponse createUserResponse = registerUserInCognito(email, password, firstName, lastName);
-			return createUserResponse.sdkHttpResponse().isSuccessful() ?
-					"User registered successfully" :
-					"User registration failed";
+			registerUserInCognito(email, password, firstName, lastName);
+			System.out.println("User registered successfully");
+			return "User registered successfully";
 		}
 		catch (CognitoIdentityProviderException exc) {
 			System.out.println(exc.awsErrorDetails().errorMessage());
@@ -262,17 +262,24 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 	}
 
 	private String getPoolId() {
+		System.out.println("Getting pool id");
+
 		String userPoolName = "cmtr-8efb0899-simple-booking-userpool-test";
 		ListUserPoolsRequest listUserPoolsRequest = ListUserPoolsRequest.builder()
 				.maxResults(10)
 				.build();
 		ListUserPoolsResponse listUserPoolsResponse = getCognitoIdentityProviderClient()
 				.listUserPools(listUserPoolsRequest);
-		return listUserPoolsResponse.userPools().stream()
+
+		String poolId = listUserPoolsResponse.userPools().stream()
 				.filter(pool -> userPoolName.equals(pool.name()))
 				.findFirst()
 				.map(UserPoolDescriptionType::id)
 				.orElse(null);
+
+		System.out.println("Got pool id: " + poolId);
+
+		return poolId;
 	}
 
 	private CognitoIdentityProviderClient getCognitoIdentityProviderClient() {
