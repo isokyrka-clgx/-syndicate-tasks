@@ -16,8 +16,16 @@ import com.syndicate.deployment.model.ResourceType;
 import com.task10.model.Reservation;
 import com.task10.model.Table;
 import com.task10.response.*;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @LambdaHandler(
@@ -29,6 +37,7 @@ import java.util.UUID;
 public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, Object> {
 
 	private static final String UNSUPPORTED_METHOD_RESPONSE = "Unsupported method";
+	private CognitoIdentityProviderClient identityProviderClient;
 	private DynamoDBMapper dynamoDBMapper;
 	private ObjectMapper objectMapper;
 
@@ -44,6 +53,9 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 
 		String httpMethod = request.getHttpMethod();
 		String resourcePath = request.getResource();
+
+		System.out.println("httpMethod: " + httpMethod);
+		System.out.println("resourcePath: " + resourcePath);
 
 		switch (resourcePath) {
 		case "/reservations":
@@ -83,14 +95,6 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		default:
 			return UNSUPPORTED_METHOD_RESPONSE;
 		}
-	}
-
-	private Object handleSignin(APIGatewayProxyRequestEvent request) {
-		return null;
-	}
-
-	private Object handleSignup(APIGatewayProxyRequestEvent request) {
-		return null;
 	}
 
 	private void initDynamoDbClient() {
@@ -154,5 +158,118 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		catch (Exception e) {
 			throw new RuntimeException("Error parsing data", e);
 		}
+	}
+
+	private String handleSignin(APIGatewayProxyRequestEvent request) {
+		JSONParser parser = new JSONParser();
+		JSONObject bodyJson = null;
+		try {
+			bodyJson = (JSONObject) parser.parse(request.getBody());
+		}
+		catch (ParseException exc) {
+			throw new RuntimeException(exc);
+		}
+		String email = (String) bodyJson.get("email");
+		String password = (String) bodyJson.get("password");
+		Map<String, String> authParameters = new HashMap<>();
+		authParameters.put("USERNAME", email);
+		authParameters.put("PASSWORD", password);
+		try {
+			AdminInitiateAuthRequest authRequest = AdminInitiateAuthRequest.builder()
+					.clientId(getClientId())
+					.userPoolId(getPoolId())
+					.authParameters(authParameters)
+					.authFlow(AuthFlowType.ADMIN_USER_PASSWORD_AUTH)
+					.build();
+
+			AdminInitiateAuthResponse response = getCognitoIdentityProviderClient().adminInitiateAuth(authRequest);
+			String accessToken = response.authenticationResult().accessToken();
+			JSONObject responseBody = new JSONObject();
+			responseBody.put("accessToken", accessToken);
+
+			return response.sdkHttpResponse().isSuccessful() ?
+					responseBody.toJSONString() : "Error";
+		}
+		catch (CognitoIdentityProviderException exc) {
+			System.out.println(exc.awsErrorDetails().errorMessage());
+		}
+		return null;
+	}
+
+	private String handleSignup(APIGatewayProxyRequestEvent request) {
+		JSONParser parser = new JSONParser();
+		JSONObject bodyJson = null;
+		try {
+			bodyJson = (JSONObject) parser.parse(request.getBody());
+		}
+		catch (ParseException exc) {
+			throw new RuntimeException(exc);
+		}
+		String firstName = (String) bodyJson.get("firstName");
+		String lastName = (String) bodyJson.get("lastName");
+		String email = (String) bodyJson.get("email");
+		String password = (String) bodyJson.get("password");
+		try {
+			AdminConfirmSignUpResponse createUserResponse = registerUserInCognito(email, password, firstName, lastName);
+			return createUserResponse.sdkHttpResponse().isSuccessful() ?
+					"User registered successfully" :
+					"User registration failed";
+		}
+		catch (CognitoIdentityProviderException exc) {
+			System.out.println(exc.awsErrorDetails().errorMessage());
+		}
+		return null;
+	}
+
+	private AdminConfirmSignUpResponse registerUserInCognito(String email, String password, String firstName,
+			String lastName) {
+		AttributeType userAttrs = AttributeType.builder()
+				.name("name").value(firstName + " " + lastName)
+				.name("email").value(email)
+				.build();
+		SignUpRequest signUpRequest = SignUpRequest.builder()
+				.userAttributes(userAttrs)
+				.username(email)
+				.clientId(getClientId())
+				.password(password)
+				.build();
+		getCognitoIdentityProviderClient().signUp(signUpRequest);
+		AdminConfirmSignUpRequest confirmSignUpRequest = AdminConfirmSignUpRequest.builder()
+				.userPoolId(getPoolId())
+				.username(email)
+				.build();
+		return getCognitoIdentityProviderClient().adminConfirmSignUp(confirmSignUpRequest);
+	}
+
+	private String getClientId() {
+		ListUserPoolClientsRequest listUserPoolClientsRequest = ListUserPoolClientsRequest.builder()
+				.userPoolId(getPoolId())
+				.build();
+		ListUserPoolClientsResponse listUserPoolClientsResponse = getCognitoIdentityProviderClient()
+				.listUserPoolClients(listUserPoolClientsRequest);
+		return listUserPoolClientsResponse.userPoolClients().get(0).clientId();
+	}
+
+	private String getPoolId() {
+		String userPoolName = "cmtr-8efb0899-simple-booking-userpool-test";
+		ListUserPoolsRequest listUserPoolsRequest = ListUserPoolsRequest.builder()
+				.maxResults(10)
+				.build();
+		ListUserPoolsResponse listUserPoolsResponse = getCognitoIdentityProviderClient()
+				.listUserPools(listUserPoolsRequest);
+		return listUserPoolsResponse.userPools().stream()
+				.filter(pool -> userPoolName.equals(pool.name()))
+				.findFirst()
+				.map(UserPoolDescriptionType::id)
+				.orElse(null);
+	}
+
+	private CognitoIdentityProviderClient getCognitoIdentityProviderClient() {
+		if (identityProviderClient == null) {
+			this.identityProviderClient = CognitoIdentityProviderClient.builder()
+					.region(Region.EU_CENTRAL_1)
+					.build();
+		}
+		return identityProviderClient;
 	}
 }

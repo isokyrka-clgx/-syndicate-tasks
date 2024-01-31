@@ -81,6 +81,7 @@
       "/signup": {
         "enable_cors": true,
         "POST": {
+          "enable_proxy": true,
           "integration_request_body_template": {},
           "authorization_type": "NONE",
           "integration_type": "lambda",
@@ -93,6 +94,7 @@
       "/signin": {
         "enable_cors": true,
         "POST": {
+          "enable_proxy": true,
           "integration_request_body_template": {},
           "authorization_type": "NONE",
           "integration_type": "lambda",
@@ -105,6 +107,7 @@
       "/tables": {
         "enable_cors": true,
         "POST": {
+          "enable_proxy": true,
           "integration_request_body_template": {},
           "authorization_type": "NONE",
           "integration_type": "lambda",
@@ -114,6 +117,7 @@
           "lambda_name": "api_handler"
         },
         "GET": {
+          "enable_proxy": true,
           "authorization_type": "NONE",
           "integration_type": "lambda",
           "method_request_parameters": {},
@@ -122,9 +126,23 @@
           "lambda_name": "api_handler"
         }
       },
+      "/tables/{tableId}": {
+        "enable_cors": true,
+        "GET": {
+          "enable_proxy": true,
+          "integration_request_body_template": {},
+          "authorization_type": "authorizer",
+          "integration_type": "lambda",
+          "method_request_parameters": {},
+          "default_error_pattern": true,
+          "integration_passthrough_behavior": "WHEN_NO_TEMPLATES",
+          "lambda_name": "api_handler"
+        }
+      },
       "/reservations": {
         "enable_cors": true,
         "POST": {
+          "enable_proxy": true,
           "integration_request_body_template": {},
           "authorization_type": "NONE",
           "integration_type": "lambda",
@@ -134,6 +152,7 @@
           "lambda_name": "api_handler"
         },
         "GET": {
+          "enable_proxy": true,
           "integration_request_body_template": {},
           "authorization_type": "NONE",
           "integration_type": "lambda",
@@ -158,6 +177,15 @@
     "sms_configuration": {},
     "username_attributes": [],
     "custom_attributes": [],
-    "client": {}
+    "client": {
+      "client_name": "client-app",
+      "generate_secret": false,
+      "explicit_auth_flows": [
+        "ALLOW_ADMIN_USER_PASSWORD_AUTH",
+        "ALLOW_CUSTOM_AUTH",
+        "ALLOW_USER_SRP_AUTH",
+        "ALLOW_REFRESH_TOKEN_AUTH"
+      ]
+    }
   }
 }
