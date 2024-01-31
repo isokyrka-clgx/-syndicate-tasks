@@ -60,9 +60,11 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		switch (resourcePath) {
 		case "/reservations":
 			if ("POST".equals(httpMethod)) {
+				System.out.println("Handling POST request reservation");
 				return handleCreateReservation(request);
 			}
 			else if ("GET".equals(httpMethod)) {
+				System.out.println("Handling GET request reservation");
 				return handleGetReservations();
 			}
 			else {
@@ -70,9 +72,11 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 			}
 		case "/tables":
 			if ("GET".equals(httpMethod)) {
+				System.out.println("Handling GET request tables");
 				return handleGetTables();
 			}
 			else if ("POST".equals(httpMethod)) {
+				System.out.println("Handling POST request tables");
 				return handleCreateTable(request);
 			}
 			else {
@@ -80,6 +84,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 			}
 		case "/signup":
 			if ("POST".equals(httpMethod)) {
+				System.out.println("Handling POST request signup");
 				return handleSignup(request);
 			}
 			else {
@@ -87,6 +92,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 			}
 		case "/signin":
 			if ("POST".equals(httpMethod)) {
+				System.out.println("Handling POST request signin");
 				return handleSignin(request);
 			}
 			else {

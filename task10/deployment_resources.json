@@ -19,7 +19,10 @@
             "dynamodb:ListStreams",
             "ssm:PutParameter",
             "ssm:GetParameter",
-            "kms:Decrypt"
+            "kms:Decrypt",
+            "cognito-idp:*",
+            "cognito-sync:*",
+            "cognito-identity:*",
           ],
           "Effect": "Allow",
           "Resource": "*"
