@@ -46,11 +46,6 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		this.initDynamoDbClient();
 		this.objectMapper = new ObjectMapper();
 
-		System.out.println(request.getRequestContext().getHttpMethod());
-		System.out.println(request.getRequestContext().getRequestId());
-		System.out.println(request.getRequestContext().getResourcePath());
-		System.out.println(request.getRequestContext().getPath());
-
 		String httpMethod = request.getHttpMethod();
 		String resourcePath = request.getResource();
 
@@ -171,8 +166,10 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		JSONObject bodyJson = null;
 		try {
 			bodyJson = (JSONObject) parser.parse(request.getBody());
+			System.out.println("Successfully parsed body json");
 		}
 		catch (ParseException exc) {
+			System.out.println("Failed to parse body json" + exc.getMessage());
 			throw new RuntimeException(exc);
 		}
 		String email = (String) bodyJson.get("email");
@@ -181,12 +178,16 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		authParameters.put("USERNAME", email);
 		authParameters.put("PASSWORD", password);
 		try {
+			System.out.println("Trying to authenticate user");
+
 			AdminInitiateAuthRequest authRequest = AdminInitiateAuthRequest.builder()
 					.clientId(getClientId())
 					.userPoolId(getPoolId())
 					.authParameters(authParameters)
 					.authFlow(AuthFlowType.ADMIN_USER_PASSWORD_AUTH)
 					.build();
+
+			System.out.println("Sending request to cognito");
 
 			AdminInitiateAuthResponse response = getCognitoIdentityProviderClient().adminInitiateAuth(authRequest);
 			String accessToken = response.authenticationResult().accessToken();
@@ -207,8 +208,10 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		JSONObject bodyJson = null;
 		try {
 			bodyJson = (JSONObject) parser.parse(request.getBody());
+			System.out.println("Successfully parsed body json");
 		}
 		catch (ParseException exc) {
+			System.out.println("Failed to parse body json" + exc.getMessage());
 			throw new RuntimeException(exc);
 		}
 		String firstName = (String) bodyJson.get("firstName");
@@ -216,6 +219,8 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, O
 		String email = (String) bodyJson.get("email");
 		String password = (String) bodyJson.get("password");
 		try {
+			System.out.println("Registering user in cognito");
+
 			AdminConfirmSignUpResponse createUserResponse = registerUserInCognito(email, password, firstName, lastName);
 			return createUserResponse.sdkHttpResponse().isSuccessful() ?
 					"User registered successfully" :
