@@ -251,7 +251,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 		try {
 			System.out.println("Registering user in cognito");
 
-			SignUpResponse signUpResponse = registerUserInCognito(email, password, firstName, lastName);
+			AdminConfirmSignUpResponse signUpResponse = registerUserInCognito(email, password, firstName, lastName);
 
 			return signUpResponse.sdkHttpResponse().isSuccessful() ?
 					ResponseHandler.successResponse("User registered successfully") :
@@ -263,7 +263,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 		}
 	}
 
-	private SignUpResponse registerUserInCognito(String email, String password, String firstName,
+	private AdminConfirmSignUpResponse registerUserInCognito(String email, String password, String firstName,
 			String lastName) {
 		AttributeType userAttrs = AttributeType.builder()
 				.name("name").value(firstName + " " + lastName)
@@ -276,11 +276,12 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 				.password(password)
 				.build();
 
-//		AdminConfirmSignUpRequest confirmSignUpRequest = AdminConfirmSignUpRequest.builder()
-//				.userPoolId(getPoolId())
-//				.username(email)
-//				.build();
-		return getCognitoIdentityProviderClient().signUp(signUpRequest);
+		getCognitoIdentityProviderClient().signUp(signUpRequest);
+		AdminConfirmSignUpRequest confirmSignUpRequest = AdminConfirmSignUpRequest.builder()
+				.userPoolId(getPoolId())
+				.username(email)
+				.build();
+		return getCognitoIdentityProviderClient().adminConfirmSignUp(confirmSignUpRequest);
 	}
 
 	private String getClientId() {
