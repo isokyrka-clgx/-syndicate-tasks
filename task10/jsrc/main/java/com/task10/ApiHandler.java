@@ -74,7 +74,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 				return ResponseHandler.successResponse(gson.toJson(handleGetReservations()));
 			}
 			else {
-				return ResponseHandler.errorResponse("Unsupported method");
+				return ResponseHandler.errorResponse(UNSUPPORTED_METHOD_RESPONSE);
 			}
 		case "/tables":
 			if ("GET".equals(httpMethod)) {
@@ -86,7 +86,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 				return ResponseHandler.successResponse(gson.toJson(handleCreateTable(request)));
 			}
 			else {
-				return ResponseHandler.errorResponse("Unsupported method");
+				return ResponseHandler.errorResponse(UNSUPPORTED_METHOD_RESPONSE);
 			}
 		case "/tables/{tableId}":
 			if ("GET".equals(httpMethod)) {
@@ -95,7 +95,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 				return ResponseHandler.successResponse(gson.toJson(handleGetTable(tableId.toString())));
 			}
 			else {
-				return ResponseHandler.errorResponse("Unsupported method");
+				return ResponseHandler.errorResponse(UNSUPPORTED_METHOD_RESPONSE);
 			}
 		case "/signup":
 			if ("POST".equals(httpMethod)) {
@@ -103,7 +103,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 				return handleSignup(request);
 			}
 			else {
-				return ResponseHandler.errorResponse("Unsupported method");
+				return ResponseHandler.errorResponse(UNSUPPORTED_METHOD_RESPONSE);
 			}
 		case "/signin":
 			if ("POST".equals(httpMethod)) {
@@ -111,10 +111,10 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 				return handleSignin(request);
 			}
 			else {
-				return ResponseHandler.errorResponse("Unsupported method");
+				return ResponseHandler.errorResponse(UNSUPPORTED_METHOD_RESPONSE);
 			}
 		default:
-			return ResponseHandler.errorResponse("Unsupported method");
+			return ResponseHandler.errorResponse(UNSUPPORTED_METHOD_RESPONSE);
 		}
 	}
 
@@ -219,7 +219,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 			System.out.println("Sending request to cognito");
 
 			AdminInitiateAuthResponse response = getCognitoIdentityProviderClient().adminInitiateAuth(authRequest);
-			String accessToken = response.authenticationResult().accessToken();
+			String accessToken = response.authenticationResult().idToken();
 			JSONObject responseBody = new JSONObject();
 			responseBody.put("accessToken", accessToken);
 
@@ -251,9 +251,9 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 		try {
 			System.out.println("Registering user in cognito");
 
-			AdminConfirmSignUpResponse adminConfirmSignUpResponse = registerUserInCognito(email, password, firstName, lastName);
+			SignUpResponse signUpResponse = registerUserInCognito(email, password, firstName, lastName);
 
-			return adminConfirmSignUpResponse.sdkHttpResponse().isSuccessful() ?
+			return signUpResponse.sdkHttpResponse().isSuccessful() ?
 					ResponseHandler.successResponse("User registered successfully") :
 					ResponseHandler.errorResponse("Failed to register user");
 		}
@@ -263,7 +263,7 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 		}
 	}
 
-	private AdminConfirmSignUpResponse registerUserInCognito(String email, String password, String firstName,
+	private SignUpResponse registerUserInCognito(String email, String password, String firstName,
 			String lastName) {
 		AttributeType userAttrs = AttributeType.builder()
 				.name("name").value(firstName + " " + lastName)
@@ -275,12 +275,12 @@ public class ApiHandler implements RequestHandler<APIGatewayProxyRequestEvent, A
 				.clientId(getClientId())
 				.password(password)
 				.build();
-		getCognitoIdentityProviderClient().signUp(signUpRequest);
-		AdminConfirmSignUpRequest confirmSignUpRequest = AdminConfirmSignUpRequest.builder()
-				.userPoolId(getPoolId())
-				.username(email)
-				.build();
-		return getCognitoIdentityProviderClient().adminConfirmSignUp(confirmSignUpRequest);
+
+//		AdminConfirmSignUpRequest confirmSignUpRequest = AdminConfirmSignUpRequest.builder()
+//				.userPoolId(getPoolId())
+//				.username(email)
+//				.build();
+		return getCognitoIdentityProviderClient().signUp(signUpRequest);
 	}
 
 	private String getClientId() {
