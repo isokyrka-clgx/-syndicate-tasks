@@ -1,86 +1,108 @@
 package com.task10.model;
 
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 @DynamoDBTable(tableName = "cmtr-8efb0899-Reservations-test")
 public class Reservation {
-	@DynamoDBHashKey(attributeName = "id")
-	private String id;
-	private Integer tableNumber;
-	private String clientName;
-	private String phoneNumber;
-	private String date;
-	private String slotTimeStart;
-	private String slotTimeEnd;
 
-	public Reservation() {
-	}
+    private String id;
+    private int tableNumber;
+    private String clientName;
+    private String phoneNumber;
+    private String date;
+    private String slotTimeStart;
+    private String slotTimeEnd;
 
-	public Reservation(String id, Integer tableNumber, String clientName, String phoneNumber, String date,
-			String slotTimeStart, String slotTimeEnd) {
-		this.id = id;
-		this.tableNumber = tableNumber;
-		this.clientName = clientName;
-		this.phoneNumber = phoneNumber;
-		this.date = date;
-		this.slotTimeStart = slotTimeStart;
-		this.slotTimeEnd = slotTimeEnd;
-	}
+    public Reservation(String id, int tableNumber, String clientName, String phoneNumber, String date,
+                       String slotTimeStart, String slotTimeEnd) {
+        this.id = id;
+        this.tableNumber = tableNumber;
+        this.clientName = clientName;
+        this.phoneNumber = phoneNumber;
+        this.date = date;
+        this.slotTimeStart = slotTimeStart;
+        this.slotTimeEnd = slotTimeEnd;
+    }
 
-	public String getId() {
-		return id;
-	}
+    public Reservation() {
+    }
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    @DynamoDBHashKey(attributeName = "id")
+    public String getId() {
+        return id;
+    }
 
-	public Integer getTableNumber() {
-		return tableNumber;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public void setTableNumber(Integer tableNumber) {
-		this.tableNumber = tableNumber;
-	}
+    @DynamoDBAttribute(attributeName = "tableNumber")
+    public int getTableNumber() {
+        return tableNumber;
+    }
 
-	public String getClientName() {
-		return clientName;
-	}
+    public void setTableNumber(int tableNumber) {
+        this.tableNumber = tableNumber;
+    }
 
-	public void setClientName(String clientName) {
-		this.clientName = clientName;
-	}
+    @DynamoDBAttribute(attributeName = "clientName")
+    public String getClientName() {
+        return clientName;
+    }
 
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
 
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
+    @DynamoDBAttribute(attributeName = "phoneNumber")
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
 
-	public String getDate() {
-		return date;
-	}
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
-	public void setDate(String date) {
-		this.date = date;
-	}
+    @DynamoDBAttribute(attributeName = "date")
+    public String getDate() {
+        return date;
+    }
 
-	public String getSlotTimeStart() {
-		return slotTimeStart;
-	}
+    public void setDate(String date) {
+        this.date = date;
+    }
 
-	public void setSlotTimeStart(String slotTimeStart) {
-		this.slotTimeStart = slotTimeStart;
-	}
+    @DynamoDBAttribute(attributeName = "slotTimeStart")
+    public String getSlotTimeStart() {
+        return slotTimeStart;
+    }
 
-	public String getSlotTimeEnd() {
-		return slotTimeEnd;
-	}
+    public void setSlotTimeStart(String slotTimeStart) {
+        this.slotTimeStart = slotTimeStart;
+    }
 
-	public void setSlotTimeEnd(String slotTimeEnd) {
-		this.slotTimeEnd = slotTimeEnd;
-	}
+    @DynamoDBAttribute(attributeName = "slotTimeEnd")
+    public String getSlotTimeEnd() {
+        return slotTimeEnd;
+    }
+
+    public void setSlotTimeEnd(String slotTimeEnd) {
+        this.slotTimeEnd = slotTimeEnd;
+    }
+
+    @Override
+    public String toString() {
+        return "Reservation{" +
+                "id='" + id + '\'' +
+                ", tableNumber=" + tableNumber +
+                ", clientName='" + clientName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", date='" + date + '\'' +
+                ", slotTimeStart='" + slotTimeStart + '\'' +
+                ", slotTimeEnd='" + slotTimeEnd + '\'' +
+                '}';
+    }
+
 }
